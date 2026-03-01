@@ -1,0 +1,33 @@
+{
+  "name": "zerox-protocol",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZeroX Protocol — Yield vaults, credit lines, and on-chain credit scoring on Avalanche C-Chain",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:api": "pnpm --filter api dev",
+    "dev:indexer": "pnpm --filter indexer dev",
+    "contracts:compile": "pnpm --filter contracts compile",
+    "contracts:test": "pnpm --filter contracts test",
+    "contracts:deploy:fuji": "pnpm --filter contracts deploy:fuji",
+    "contracts:deploy:mainnet": "pnpm --filter contracts deploy:mainnet"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3",
+    "prettier": "^3.4.2",
+    "eslint": "^9.18.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
