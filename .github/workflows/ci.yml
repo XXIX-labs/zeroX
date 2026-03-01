@@ -1,0 +1,284 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  # ─── Install & Cache ───────────────────────────────────────────────────────
+  install:
+    name: Install dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+  # ─── Contract Compile ──────────────────────────────────────────────────────
+  contracts-compile:
+    name: Compile contracts
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Compile Hardhat
+        run: pnpm --filter contracts compile
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-artifacts
+          path: packages/contracts/artifacts/
+          retention-days: 1
+
+  # ─── Contract Tests ────────────────────────────────────────────────────────
+  contracts-test:
+    name: Contract tests (Hardhat)
+    needs: contracts-compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: contract-artifacts
+          path: packages/contracts/artifacts/
+
+      - name: Run Hardhat tests
+        run: pnpm --filter contracts test
+        env:
+          REPORT_GAS: true
+
+      - name: Run Foundry fuzz tests
+        run: pnpm --filter contracts test:fuzz
+
+  # ─── Contract Lint ─────────────────────────────────────────────────────────
+  contracts-lint:
+    name: Solhint lint
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint contracts
+        run: pnpm --filter contracts lint
+
+  # ─── SDK Build & Test ──────────────────────────────────────────────────────
+  sdk:
+    name: SDK build & test
+    needs: contracts-compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK
+        run: pnpm --filter sdk build
+
+      - name: Type-check SDK
+        run: pnpm --filter sdk lint
+
+  # ─── API Test ──────────────────────────────────────────────────────────────
+  api:
+    name: API type-check
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check API
+        run: pnpm --filter api lint
+
+  # ─── Indexer Type-check ────────────────────────────────────────────────────
+  indexer:
+    name: Indexer type-check
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Type-check indexer
+        run: pnpm --filter indexer lint
+
+  # ─── Frontend Build ────────────────────────────────────────────────────────
+  frontend:
+    name: Frontend build
+    needs: [install, sdk]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK first
+        run: pnpm --filter sdk build
+
+      - name: Build frontend
+        run: pnpm --filter frontend build
+        env:
+          VITE_WALLETCONNECT_PROJECT_ID: ${{ secrets.VITE_WALLETCONNECT_PROJECT_ID }}
+          VITE_API_URL: https://api.zerox.finance
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: packages/frontend/dist/
+          retention-days: 1
+
+  # ─── Security scan ─────────────────────────────────────────────────────────
+  slither:
+    name: Slither security scan
+    needs: contracts-compile
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Don't block CI — review report manually
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Slither
+        run: pip install slither-analyzer
+
+      - name: Run Slither
+        run: |
+          cd packages/contracts
+          slither . --json slither-report.json || true
+
+      - name: Upload Slither report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-report
+          path: packages/contracts/slither-report.json
+          retention-days: 30
