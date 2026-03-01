@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.vercel/
+
+# Hardhat / Foundry
+artifacts/
+cache/
+typechain-types/
+packages/contracts/cache/
+packages/contracts/out/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Coverage
+coverage/
+lcov.info
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Turbo
+.turbo/
+
+# Deployments (keep templates, ignore actual deployment data with keys)
+packages/contracts/deployments/*.local.json
+
+# Database
+*.sqlite
+*.sqlite3
+
+# Misc
+*.tsbuildinfo
+
+# Documents
+*.docx
+commit_plan.sh
