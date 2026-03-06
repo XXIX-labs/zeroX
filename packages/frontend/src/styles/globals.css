@@ -1,0 +1,216 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg:         hsl(220, 20%, 7%);
+    --color-bg-deep:    hsl(220, 22%, 5%);
+    --color-surface:    hsl(220, 18%, 11%);
+    --color-surface-2:  hsl(220, 16%, 14%);
+    --color-border:     hsl(220, 14%, 16%);
+    --color-border-b:   hsl(220, 14%, 22%);
+    --color-accent:     hsl(160, 84%, 50%);
+    --color-accent-m:   hsl(160, 60%, 35%);
+    --color-danger:     hsl(0, 72%, 56%);
+    --color-warning:    hsl(40, 96%, 56%);
+    --color-text:       hsl(0, 0%, 93%);
+    --color-muted:      hsl(220, 10%, 45%);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-bg-deep);
+    color: var(--color-text);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Scrollbar ───────────────────────────────────────── */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(220, 14%, 20%);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(220, 14%, 28%);
+  }
+
+  ::selection {
+    background: hsl(160, 84%, 50%, 0.15);
+    color: var(--color-text);
+  }
+
+  /* ── Focus visible ─────────────────────────────────── */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ── Card ────────────────────────────────────────────── */
+  .card {
+    @apply bg-surface border border-border rounded-xl;
+    box-shadow: 0 1px 2px hsl(0, 0%, 0%, 0.5),
+                0 0 0 1px hsl(220, 14%, 14%);
+  }
+
+  .card-elevated {
+    @apply bg-surface-elevated border border-border-bright rounded-xl;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           font-mono font-medium text-sm tracking-wide
+           bg-accent text-bg-deep transition-all duration-200
+           hover:brightness-110 hover:shadow-glow-accent
+           active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           font-mono font-medium text-sm tracking-wide text-text-muted
+           bg-transparent border border-border transition-all duration-200
+           hover:border-border-bright hover:text-text hover:bg-surface
+           active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg
+           font-medium text-sm text-text-muted transition-all duration-200
+           hover:bg-surface hover:text-text
+           active:scale-[0.97];
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           font-mono font-medium text-sm tracking-wide
+           bg-status-danger/15 text-status-danger border border-status-danger/20
+           transition-all duration-200
+           hover:bg-status-danger/25 hover:shadow-glow-danger
+           active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  /* ── Input ───────────────────────────────────────────── */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg bg-bg border border-border
+           text-text placeholder:text-text-dim font-mono text-sm
+           focus:outline-none focus:border-accent-muted focus:ring-1 focus:ring-accent/20
+           transition-all duration-200;
+  }
+
+  /* ── Badge ───────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2 py-0.5
+           rounded font-mono text-2xs font-medium uppercase tracking-wider;
+  }
+
+  .badge-green  { @apply badge bg-status-success/10 text-status-success; }
+  .badge-yellow { @apply badge bg-status-warning/10 text-status-warning; }
+  .badge-red    { @apply badge bg-status-danger/10 text-status-danger; }
+  .badge-accent { @apply badge bg-accent-dim text-accent; }
+  .badge-muted  { @apply badge bg-surface text-text-muted; }
+
+  /* ── Stats ───────────────────────────────────────────── */
+  .stat-number {
+    @apply text-2xl font-bold text-text font-mono tabular-nums;
+  }
+
+  .stat-label {
+    @apply text-2xs font-mono font-medium text-text-muted uppercase tracking-widest;
+  }
+
+  /* ── Divider ─────────────────────────────────────────── */
+  .divider {
+    @apply border-t border-border;
+  }
+
+  /* ── Skeleton ────────────────────────────────────────── */
+  .skeleton {
+    @apply bg-surface rounded animate-pulse;
+  }
+
+  /* ── Nav ─────────────────────────────────────────────── */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+           text-text-muted transition-all duration-150 cursor-pointer
+           hover:bg-surface hover:text-text;
+  }
+
+  .nav-item-active {
+    @apply flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
+           text-accent bg-accent-dim cursor-pointer
+           border-l-2 border-accent pl-[10px];
+  }
+}
+
+@layer utilities {
+  /* ── Text accent gradient ────────────────────────────── */
+  .text-gradient-accent {
+    background: linear-gradient(135deg, hsl(160, 84%, 50%) 0%, hsl(180, 70%, 45%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Glow utilities ──────────────────────────────────── */
+  .glow-accent { box-shadow: 0 0 24px hsl(160, 84%, 50%, 0.2); }
+  .glow-danger { box-shadow: 0 0 24px hsl(0, 72%, 56%, 0.2); }
+
+  /* ── No scrollbar ────────────────────────────────────── */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* ── Tabular numbers ─────────────────────────────────── */
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* ── Noise overlay ───────────────────────────────────── */
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Dot grid background ─────────────────────────────── */
+  .bg-dots {
+    background-image: radial-gradient(circle, hsl(220, 14%, 18%) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
+/* ── Recharts ────────────────────────────────────────────── */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: hsl(220, 14%, 14%);
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: hsl(220, 16%, 14%) !important;
+  border: 1px solid hsl(220, 14%, 20%) !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 12px !important;
+}
