@@ -1,0 +1,7 @@
+{
+  "_note": "Avalanche C-Chain mainnet deployment addresses — populated after audit and deployment",
+  "_chainId": 43114,
+  "_network": "mainnet",
+  "_auditRequired": true,
+  "_warning": "DO NOT deploy to mainnet without completed external security audit"
+}

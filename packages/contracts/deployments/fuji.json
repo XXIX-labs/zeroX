@@ -1,0 +1,42 @@
+{
+  "MockBenqiUSDC": {
+    "address": "0xB4d2b74cD9F4315ae2446C13B11bF27ADa84fc53",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:28.081Z"
+  },
+  "MockATokenUSDC": {
+    "address": "0xFb4A7929b6bdcf267Ae0551e8fAF735c17069A2A",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:33.918Z"
+  },
+  "MockPriceFeed": {
+    "address": "0x3c5aa153C035777f0f1e82Ff58779773Ea16397d",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:37.973Z"
+  },
+  "MockAavePool": {
+    "address": "0xc4079c3Af61ec96466144b2fCc99Fe9123d057c4",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:43.639Z"
+  },
+  "ZeroXScore": {
+    "address": "0xC41845eA00181ebc709f647E1d47ed69746d485A",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:47.346Z"
+  },
+  "ZeroXVaultUSDC": {
+    "address": "0xb56098Ef9Ac2296f306A014e58e432105Cc37329",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:51.496Z"
+  },
+  "ZeroXCredit": {
+    "address": "0xdadFbb531FEB9C4375d7c6ab347554484d097beF",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:28:55.857Z"
+  },
+  "ZeroXRegistry": {
+    "address": "0xBE12f47fcE3100ebe7fFB60122E9356cedb7923e",
+    "deployer": "0xB77bA9D875b0c73dbcBed5aC11F2cb2C37228a37",
+    "deployedAt": "2026-03-08T17:29:35.478Z"
+  }
+}
