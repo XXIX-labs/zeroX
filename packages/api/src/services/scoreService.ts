@@ -1,4 +1,4 @@
-import { eq, desc, gte, and } from 'drizzle-orm'
+import { eq, desc, gte, and, sql } from 'drizzle-orm'
 import type { Database } from '../plugins/db'
 import { userScores } from '../db/schema'
 
@@ -91,38 +91,40 @@ export async function getLeaderboard(
 
   const offset = (page - 1) * limit
 
-  // Get distinct latest score per user
-  const rows = await db.execute<{
-    user_address: string
-    score:        number
-    risk_tier:    string
-    computed_at:  string
-    row_num:      number
-    total:        number
-  }>(
-    `SELECT user_address, score, risk_tier, computed_at, total
+  // Get distinct latest score per user (columns are camelCase in DB)
+  const queryResult = await db.execute(
+    sql`SELECT "userAddress", score, "riskTier", "computedAt", total
      FROM (
-       SELECT DISTINCT ON (user_address)
-         user_address,
+       SELECT DISTINCT ON ("userAddress")
+         "userAddress",
          score,
-         risk_tier,
-         computed_at,
+         "riskTier",
+         "computedAt",
          COUNT(*) OVER () AS total
        FROM user_scores
-       ORDER BY user_address, computed_at DESC
+       ORDER BY "userAddress", "computedAt" DESC
      ) latest
      ORDER BY score DESC
      LIMIT ${limit} OFFSET ${offset}`
   )
 
+  // postgres.js driver: db.execute() returns rows array directly
+  const rows = (Array.isArray(queryResult) ? queryResult : (queryResult as any).rows ?? []) as Array<{
+    userAddress: string
+    score:       number
+    riskTier:    string
+    computedAt:  string
+    total:       string | number
+  }>
+
   const total = rows.length > 0 ? Number(rows[0]!.total) : 0
 
   const entries: LeaderboardEntry[] = rows.map((r, idx) => ({
     rank:        offset + idx + 1,
-    userAddress: r.user_address,
+    userAddress: r.userAddress,
     score:       r.score,
-    riskTier:    r.risk_tier,
-    computedAt:  new Date(r.computed_at).toISOString(),
+    riskTier:    r.riskTier,
+    computedAt:  new Date(r.computedAt).toISOString(),
   }))
 
   const result = {

@@ -38,7 +38,7 @@ const schema = z.object({
   ADMIN_SECRET: z.string().default('change_me_in_production'),
 
   // Jobs
-  ENABLE_JOBS: z.coerce.boolean().default(true),
+  ENABLE_JOBS: z.string().default('true').transform(v => v !== 'false' && v !== '0'),
   SNAPSHOT_INTERVAL_MS: z.coerce.number().default(5 * 60 * 1000), // 5 min
 })
 

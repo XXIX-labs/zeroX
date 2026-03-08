@@ -15,7 +15,7 @@ const TIER_LIMITS: Record<string, number> = {
 }
 
 /** Routes that skip API key auth */
-const PUBLIC_PATHS = ['/api/v1/health', '/api/v1/stats']
+const PUBLIC_PATHS = ['/api/v1/health', '/api/v1/stats', '/api/v1/admin']
 
 interface ApiKeyRow {
   id: number

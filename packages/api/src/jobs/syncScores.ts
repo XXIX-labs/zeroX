@@ -3,17 +3,46 @@ import type IORedis from 'ioredis'
 import type { Database } from '../plugins/db'
 import { userScores } from '../db/schema'
 import { getConfig } from '../config'
-import { createPublicClient, http, parseAbi } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { avalanche, avalancheFuji } from 'viem/chains'
 import { sql, desc } from 'drizzle-orm'
 
 const JOB_NAME = 'sync-scores'
 const QUEUE_NAME = 'score-sync'
 
-const SCORE_ABI = parseAbi([
-  'function getScoreData(address user) view returns (tuple(uint16 score, uint40 lastUpdated, uint32 repaymentSignal, uint32 utilizationSignal, uint32 accountAgeSignal, uint32 collateralSignal, uint32 diversificationSignal, uint32 totalRepayments, uint32 onTimeRepayments, uint32 totalVolumeUSD, uint8 liquidationCount, uint40 firstDepositAt))',
-  'function getRiskTier(uint16 score) pure returns (string)',
-])
+const SCORE_ABI = [
+  {
+    name: 'getScoreData',
+    type: 'function' as const,
+    stateMutability: 'view' as const,
+    inputs: [{ name: 'user', type: 'address' as const }],
+    outputs: [{
+      name: '',
+      type: 'tuple' as const,
+      components: [
+        { name: 'score', type: 'uint16' as const },
+        { name: 'lastUpdated', type: 'uint40' as const },
+        { name: 'repaymentSignal', type: 'uint32' as const },
+        { name: 'utilizationSignal', type: 'uint32' as const },
+        { name: 'accountAgeSignal', type: 'uint32' as const },
+        { name: 'collateralSignal', type: 'uint32' as const },
+        { name: 'diversificationSignal', type: 'uint32' as const },
+        { name: 'totalRepayments', type: 'uint32' as const },
+        { name: 'onTimeRepayments', type: 'uint32' as const },
+        { name: 'totalVolumeUSD', type: 'uint32' as const },
+        { name: 'liquidationCount', type: 'uint8' as const },
+        { name: 'firstDepositAt', type: 'uint40' as const },
+      ],
+    }],
+  },
+  {
+    name: 'getRiskTier',
+    type: 'function' as const,
+    stateMutability: 'pure' as const,
+    inputs: [{ name: 'score', type: 'uint16' as const }],
+    outputs: [{ name: '', type: 'string' as const }],
+  },
+] as const
 
 const TIER_NAMES: Record<string, string> = {
   'EXCELLENT': 'EXCELLENT',
