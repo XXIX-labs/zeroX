@@ -62,3 +62,5 @@ packages/contracts/deployments/*.local.json
 # Documents
 *.docx
 commit_plan.sh
+packages/contracts/lib/
+packages/contracts/forge-cache/
