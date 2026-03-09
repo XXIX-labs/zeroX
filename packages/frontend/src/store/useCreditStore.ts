@@ -1,5 +1,4 @@
 import { create } from 'zustand'
-import { immer } from 'zustand/middleware/immer'
 
 interface CreditLineData {
   isOpen:           boolean
@@ -27,14 +26,12 @@ interface CreditStoreState {
   setError:      (error: string | null) => void
 }
 
-export const useCreditStore = create<CreditStoreState>()(
-  immer((set) => ({
-    creditLine: null,
-    loading:    false,
-    error:      null,
+export const useCreditStore = create<CreditStoreState>()((set) => ({
+  creditLine: null,
+  loading:    false,
+  error:      null,
 
-    setCreditLine: (data) => set((state) => { state.creditLine = data }),
-    setLoading:    (loading) => set((state) => { state.loading   = loading }),
-    setError:      (error)   => set((state) => { state.error     = error   }),
-  }))
-)
+  setCreditLine: (data) => set({ creditLine: data }),
+  setLoading:    (loading) => set({ loading }),
+  setError:      (error)   => set({ error }),
+}))
