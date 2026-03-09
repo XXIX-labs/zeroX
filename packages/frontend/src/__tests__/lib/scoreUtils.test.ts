@@ -157,13 +157,13 @@ describe('GAUGE_SEGMENTS', () => {
   })
 
   it('covers the full score range 300-850', () => {
-    expect(GAUGE_SEGMENTS[0].from).toBe(300)
-    expect(GAUGE_SEGMENTS[GAUGE_SEGMENTS.length - 1].to).toBe(850)
+    expect(GAUGE_SEGMENTS[0]!.from).toBe(300)
+    expect(GAUGE_SEGMENTS[GAUGE_SEGMENTS.length - 1]!.to).toBe(850)
   })
 
   it('has contiguous segments (no gaps)', () => {
     for (let i = 1; i < GAUGE_SEGMENTS.length; i++) {
-      expect(GAUGE_SEGMENTS[i].from).toBe(GAUGE_SEGMENTS[i - 1].to)
+      expect(GAUGE_SEGMENTS[i]!.from).toBe(GAUGE_SEGMENTS[i - 1]!.to)
     }
   })
 

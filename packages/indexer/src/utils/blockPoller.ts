@@ -1,11 +1,11 @@
-import type IORedis from 'ioredis'
+import type Redis from 'ioredis'
 import type { PublicClient } from 'viem'
 import type { Logger } from 'pino'
 
 const CURSOR_KEY_PREFIX = 'indexer:cursor:'
 
 export async function getLastProcessedBlock(
-  redis: IORedis,
+  redis: Redis,
   contractAddress: string,
   defaultBlock: number
 ): Promise<number> {
@@ -15,7 +15,7 @@ export async function getLastProcessedBlock(
 }
 
 export async function saveLastProcessedBlock(
-  redis: IORedis,
+  redis: Redis,
   contractAddress: string,
   blockNumber: number
 ): Promise<void> {
@@ -61,7 +61,7 @@ export async function getSafeHead(
  * Runs a continuous polling loop that calls `processRange` for each new batch.
  */
 export async function runPollingLoop(opts: {
-  redis:              IORedis
+  redis:              Redis
   client:             PublicClient
   contractAddress:    string
   startBlock:         number

@@ -10,7 +10,9 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "noEmit": true
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

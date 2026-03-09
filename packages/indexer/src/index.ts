@@ -1,6 +1,6 @@
 import { createPublicClient, http, fallback } from 'viem'
 import { avalanche, avalancheFuji } from 'viem/chains'
-import IORedis from 'ioredis'
+import Redis from 'ioredis'
 import pino from 'pino'
 import { getConfig } from './config'
 import { getDb, closeDb } from './db'
@@ -8,12 +8,15 @@ import { startVaultListener } from './listeners/vaultListener'
 import { startCreditListener } from './listeners/creditListener'
 import { startScoreListener } from './listeners/scoreListener'
 
-const logger = pino({
+const loggerOpts: pino.LoggerOptions = {
   level: process.env.LOG_LEVEL ?? 'info',
-  transport: process.env.NODE_ENV !== 'production'
-    ? { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:standard' } }
-    : undefined,
-})
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  loggerOpts.transport = { target: 'pino-pretty', options: { colorize: true, translateTime: 'SYS:standard' } }
+}
+
+const logger = pino(loggerOpts)
 
 async function main() {
   const config = getConfig()
@@ -33,7 +36,7 @@ async function main() {
     batch: { multicall: true },
   })
 
-  const redis = new IORedis(config.REDIS_URL, {
+  const redis = new Redis(config.REDIS_URL, {
     maxRetriesPerRequest: null,
     lazyConnect: true,
   })

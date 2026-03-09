@@ -26,6 +26,7 @@
     "viem": "^2.22.8",
     "wagmi": "^2.14.8",
     "@wagmi/connectors": "^5.7.7",
+    "immer": "^10.1.1",
     "zustand": "^5.0.3",
     "framer-motion": "^11.16.0",
     "react-hot-toast": "^2.5.1",

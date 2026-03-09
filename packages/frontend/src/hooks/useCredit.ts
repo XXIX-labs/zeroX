@@ -63,7 +63,7 @@ export function useCreditLine() {
     query: { enabled: !!user && !!creditAddress && creditLine?.isOpen, refetchInterval: 15_000 },
   })
 
-  const totalDebt = (debt?.principal ?? 0n) + (debt?.interest ?? 0n)
+  const totalDebt = ((debt as readonly bigint[] | undefined)?.[0] ?? 0n) + ((debt as readonly bigint[] | undefined)?.[1] ?? 0n)
 
   // LTV in bps: (totalDebt / collateralUSD) * 10000
   const ltvBps = collateralUSD && collateralUSD > 0n
@@ -74,8 +74,8 @@ export function useCreditLine() {
     isOpen:         creditLine?.isOpen ?? false,
     collateralVault: creditLine?.collateralVault,
     collateralShares: creditLine?.collateralShares ?? 0n,
-    principal:      debt?.principal ?? 0n,
-    interest:       debt?.interest ?? 0n,
+    principal:      (debt as readonly bigint[] | undefined)?.[0] ?? 0n,
+    interest:       (debt as readonly bigint[] | undefined)?.[1] ?? 0n,
     totalDebt,
     healthFactor:   healthFactor ?? 0n,
     maxBorrowable:  maxBorrowable ?? 0n,

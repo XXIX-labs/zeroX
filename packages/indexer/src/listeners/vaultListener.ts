@@ -1,5 +1,5 @@
 import type { PublicClient } from 'viem'
-import type IORedis from 'ioredis'
+import type Redis from 'ioredis'
 import type { Logger } from 'pino'
 import type { Database } from '../db'
 import { VAULT_ABI } from '../abis'
@@ -9,7 +9,7 @@ import { getConfig } from '../config'
 
 export async function startVaultListener(
   client: PublicClient,
-  redis: IORedis,
+  redis: Redis,
   db: Database,
   logger: Logger
 ): Promise<Array<() => void>> {

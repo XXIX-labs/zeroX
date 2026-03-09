@@ -27,7 +27,7 @@ export const wagmiConfig = createConfig({
         id: 'coreWallet',
         name: 'Core Wallet',
         provider(window) {
-          return window?.avalanche
+          return (window as any)?.avalanche
         },
       },
     }),

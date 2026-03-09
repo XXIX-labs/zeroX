@@ -94,6 +94,9 @@ jobs:
         env:
           REPORT_GAS: true
 
+      - name: Install forge-std
+        run: cd packages/contracts && forge install foundry-rs/forge-std --no-commit --no-git
+
       - name: Run Foundry fuzz tests
         run: pnpm --filter contracts test:fuzz
 
