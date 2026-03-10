@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAccount, useChainId, useSwitchChain } from 'wagmi'
-import { avalanche } from 'wagmi/chains'
 import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 import { AppShell } from './components/layout/AppShell'
@@ -22,7 +21,7 @@ export default function App() {
   useEffect(() => {
     if (isConnected && chainId !== ACTIVE_CHAIN_ID) {
       setIsWrongNetwork(true)
-      switchChain({ chainId: ACTIVE_CHAIN_ID as typeof avalanche.id })
+      switchChain({ chainId: ACTIVE_CHAIN_ID })
     } else {
       setIsWrongNetwork(false)
     }

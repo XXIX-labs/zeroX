@@ -54,6 +54,7 @@ export const wagmiConfig = createConfig({
 })
 
 // Chain ID for the active network
-export const ACTIVE_CHAIN_ID = Number(
-  import.meta.env['VITE_CHAIN_ID'] ?? avalanche.id
-)
+const _chainId = Number(import.meta.env['VITE_CHAIN_ID'] || avalanche.id)
+export const ACTIVE_CHAIN_ID = (
+  _chainId === avalancheFuji.id ? avalancheFuji.id : avalanche.id
+) as typeof avalanche.id | typeof avalancheFuji.id
