@@ -26,12 +26,12 @@ export class VaultModule {
 
     const [totalAssets, totalSupply, aaveApy, benqiApy, aaveAlloc, benqiAlloc] =
       await Promise.all([
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalAssets' }),
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalSupply' }),
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getAaveAPY' }),
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getBenqiAPY' }),
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'aaveAllocation' }),
-        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'benqiAllocation' }),
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalAssets' }) as Promise<bigint>,
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalSupply' }) as Promise<bigint>,
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getAaveAPY' }) as Promise<bigint>,
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getBenqiAPY' }) as Promise<bigint>,
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'aaveAllocation' }) as Promise<bigint>,
+        this.client.readContract({ address, abi: VAULT_ABI, functionName: 'benqiAllocation' }) as Promise<bigint>,
       ])
 
     return { address, token, totalAssets, totalSupply, aaveApy, benqiApy, aaveAlloc, benqiAlloc }
@@ -41,10 +41,10 @@ export class VaultModule {
     const address = this.getVaultAddress(token)
 
     const [shares, positionUSD, totalAssets, totalSupply] = await Promise.all([
-      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'balanceOf', args: [user] }),
-      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getUserPositionUSD', args: [user] }),
-      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalAssets' }),
-      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalSupply' }),
+      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'balanceOf', args: [user] }) as Promise<bigint>,
+      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'getUserPositionUSD', args: [user] }) as Promise<bigint>,
+      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalAssets' }) as Promise<bigint>,
+      this.client.readContract({ address, abi: VAULT_ABI, functionName: 'totalSupply' }) as Promise<bigint>,
     ])
 
     const sharePrice = totalSupply > 0n
@@ -56,24 +56,24 @@ export class VaultModule {
 
   async previewDeposit(token: 'USDC' | 'USDT', assets: bigint): Promise<bigint> {
     const address = this.getVaultAddress(token)
-    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewDeposit', args: [assets] })
+    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewDeposit', args: [assets] }) as Promise<bigint>
   }
 
   async previewWithdraw(token: 'USDC' | 'USDT', assets: bigint): Promise<bigint> {
     const address = this.getVaultAddress(token)
-    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewWithdraw', args: [assets] })
+    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewWithdraw', args: [assets] }) as Promise<bigint>
   }
 
   async previewRedeem(token: 'USDC' | 'USDT', shares: bigint): Promise<bigint> {
     const address = this.getVaultAddress(token)
-    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewRedeem', args: [shares] })
+    return this.client.readContract({ address, abi: VAULT_ABI, functionName: 'previewRedeem', args: [shares] }) as Promise<bigint>
   }
 
   async checkAllowance(token: 'USDC' | 'USDT', owner: Address, underlyingToken: Address): Promise<bigint> {
     const spender = this.getVaultAddress(token)
     return this.client.readContract({
       address: underlyingToken, abi: ERC20_ABI, functionName: 'allowance', args: [owner, spender],
-    })
+    }) as Promise<bigint>
   }
 
   async approve(underlyingToken: Address, spender: Address, amount: bigint): Promise<TxResult> {

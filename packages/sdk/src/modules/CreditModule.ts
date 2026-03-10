@@ -2,6 +2,20 @@ import type { PublicClient, WalletClient, Address } from 'viem'
 import { CREDIT_ABI } from '../abis'
 import type { CreditLineInfo, TxResult, ZeroXClientConfig } from '../types'
 
+interface CreditLineRaw {
+  collateralVault: Address
+  collateralShares: bigint
+  principal: bigint
+  interestIndex: bigint
+  openedAt: bigint
+  isOpen: boolean
+}
+
+interface DebtRaw {
+  principal: bigint
+  interest: bigint
+}
+
 export class CreditModule {
   private client: PublicClient
   private wallet?: WalletClient
@@ -27,11 +41,11 @@ export class CreditModule {
     const addr = this.ensureAddress()
 
     const [line, currentDebt, healthFactor, maxBorrowable, collateralUSD] = await Promise.all([
-      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCreditLine', args: [user] }),
-      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCurrentDebt', args: [user] }),
-      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getHealthFactor', args: [user] }),
-      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getMaxBorrowable', args: [user] }),
-      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCollateralUSD', args: [user] }),
+      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCreditLine', args: [user] }) as Promise<CreditLineRaw>,
+      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCurrentDebt', args: [user] }) as Promise<DebtRaw>,
+      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getHealthFactor', args: [user] }) as Promise<bigint>,
+      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getMaxBorrowable', args: [user] }) as Promise<bigint>,
+      this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getCollateralUSD', args: [user] }) as Promise<bigint>,
     ])
 
     return {
@@ -53,7 +67,7 @@ export class CreditModule {
 
   async getHealthFactor(user: Address): Promise<bigint> {
     const addr = this.ensureAddress()
-    return this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getHealthFactor', args: [user] })
+    return this.client.readContract({ address: addr, abi: CREDIT_ABI, functionName: 'getHealthFactor', args: [user] }) as Promise<bigint>
   }
 
   async openCreditLine(collateralVault: Address, sharesToDeposit: bigint): Promise<TxResult> {
