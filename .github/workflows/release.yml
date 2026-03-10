@@ -30,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build all packages
-        run: pnpm build
+      - name: Build SDK
+        run: pnpm --filter sdk build
 
       - name: Publish @zerox/credit-sdk
         run: pnpm --filter sdk publish --access public --no-git-checks
